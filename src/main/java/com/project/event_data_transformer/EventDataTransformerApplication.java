@@ -1,0 +1,17 @@
+package com.project.event_data_transformer;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
+@SpringBootApplication
+@EnableAsync
+@EnableScheduling
+public class EventDataTransformerApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(EventDataTransformerApplication.class, args);
+    }
+
+}
