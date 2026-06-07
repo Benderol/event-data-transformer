@@ -2,9 +2,7 @@ package com.project.event_data_transformer.eventlog;
 
 import com.project.event_data_transformer.eventlog.dto.EventLogResponse;
 import com.project.event_data_transformer.eventlog.mappers.EventLogMapper;
-import com.project.event_data_transformer.eventlog.models.EventLogEntity;
 import com.project.event_data_transformer.eventlog.models.EventLogModel;
-import com.project.event_data_transformer.eventlog.models.EventLogType;
 import com.project.event_data_transformer.eventlog.repository.EventLogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
@@ -18,7 +16,6 @@ public class EventLogService {
 
     private final EventLogRepository repository;
 
-    //TODO: Add EventRetentionMechanism
     public List<EventLogResponse> getAll() {
         return repository.findAll().stream()
                 .map(e -> new EventLogResponse(e.getType(), e.getInputTopic(), e.getOutputTopic(), e.getMessage(), e.getCreatedAt()))

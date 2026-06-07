@@ -2,7 +2,7 @@ package com.project.event_data_transformer.transformer;
 
 import com.project.event_data_transformer.transformer.dto.CreateTransformerRequest;
 import com.project.event_data_transformer.transformer.dto.TransformerResponse;
-import com.project.event_data_transformer.transformer.models.TransformerEntity;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +22,7 @@ public class DataTransformerController {
     }
 
     @PostMapping
-    public ResponseEntity<TransformerResponse> create(@RequestBody CreateTransformerRequest request) {
+    public ResponseEntity<TransformerResponse> create(@RequestBody @Valid CreateTransformerRequest request) {
         return ResponseEntity.ok(transformerService.create(request));
     }
 

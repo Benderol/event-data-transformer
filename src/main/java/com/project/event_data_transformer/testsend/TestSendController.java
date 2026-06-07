@@ -1,5 +1,6 @@
 package com.project.event_data_transformer.testsend;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -16,7 +17,7 @@ public class TestSendController {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     @PostMapping
-    public ResponseEntity<String> testSend(@RequestBody TestSendRequest request) {
+    public ResponseEntity<String> testSend(@RequestBody @Valid TestSendRequest request) {
         kafkaTemplate.send(request.topic(), request.message());
         return ResponseEntity.ok("Sent to '" + request.topic() + "': " + request.message());
     }

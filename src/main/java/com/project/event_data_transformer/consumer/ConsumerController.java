@@ -2,6 +2,7 @@ package com.project.event_data_transformer.consumer;
 
 import com.project.event_data_transformer.consumer.dto.ConsumerResponse;
 import com.project.event_data_transformer.consumer.dto.CreateConsumerRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,14 +22,14 @@ public class ConsumerController {
     }
 
     @PostMapping
-    public ResponseEntity<ConsumerResponse> create(CreateConsumerRequest request) {
+    public ResponseEntity<ConsumerResponse> create(@RequestBody @Valid CreateConsumerRequest request) {
         return ResponseEntity.ok(consumerService.create(request));
     }
 
     @PostMapping("/{id}/start")
     public ResponseEntity<String> start(@PathVariable Long id) {
         consumerService.start(id);
-        return ResponseEntity.ok("Consumer " + id + " stopped");
+        return ResponseEntity.ok("Consumer " + id + " started");
     }
 
     @PostMapping("/{id}/stop")
