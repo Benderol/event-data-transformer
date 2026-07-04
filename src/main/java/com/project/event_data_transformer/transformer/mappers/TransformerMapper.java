@@ -19,7 +19,7 @@ public class TransformerMapper {
 
     public static TransformerResponse from(TransformerEntity entity) {
         var rules = entity.getRules().stream().map(TransformerMapper::fromFieldRule).toList();
-        return new TransformerResponse(entity.getName(), entity.getInputTopic(), entity.getOutputTopic(), entity.isEnabled(), entity.getCreatedAt(), rules);
+        return new TransformerResponse(entity.getId(), entity.getName(), entity.getInputTopic(), entity.getOutputTopic(), entity.isEnabled(), entity.getCreatedAt(), rules);
     }
 
     private static FieldRuleEntity toFieldRule(FieldRuleDto dto) {

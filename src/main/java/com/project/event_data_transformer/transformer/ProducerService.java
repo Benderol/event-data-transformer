@@ -48,7 +48,7 @@ public class ProducerService {
                 log.info("Transformer [{}] sending to '{}': {}", transformer.getId(), transformer.getOutputTopic(), kafkaMessage);
                 kafkaTemplate.send(transformer.getOutputTopic(), kafkaMessage);
 
-                var eventLog = new EventLogModel(EventLogType.CONSUMER, inputTopic, transformer.getOutputTopic(), kafkaMessage);
+                var eventLog = new EventLogModel(EventLogType.PRODUCER, inputTopic, transformer.getOutputTopic(), kafkaMessage);
                 eventLogService.log(eventLog);
             } catch (Exception e) {
                 log.error("Transformer [{}] failed: {}", transformer.getId(), e.getMessage());
@@ -89,11 +89,8 @@ public class ProducerService {
         try {
             var from = DateTimeFormatter.ofPattern(fromFormat);
             var to = DateTimeFormatter.ofPattern(toFormat);
-            try {
-                return LocalDateTime.parse(value, from).format(to);
-            } catch (Exception e) {
-                return LocalDate.parse(value, from).format(to);
-            }
+            var temporal = from.parseBest(value, LocalDateTime::from, LocalDate::from);
+            return to.format(temporal);
         } catch (Exception e) {
             log.error("Failed to reformat date '{}' from '{}' to '{}': {}", value, fromFormat, toFormat, e.getMessage());
             return value;

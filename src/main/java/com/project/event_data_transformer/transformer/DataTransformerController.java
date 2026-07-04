@@ -26,6 +26,18 @@ public class DataTransformerController {
         return ResponseEntity.ok(transformerService.create(request));
     }
 
+    @PostMapping("/{id}/enable")
+    public ResponseEntity<Void> enable(@PathVariable Long id) {
+        transformerService.setEnabled(id, true);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/disable")
+    public ResponseEntity<Void> disable(@PathVariable Long id) {
+        transformerService.setEnabled(id, false);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         transformerService.delete(id);

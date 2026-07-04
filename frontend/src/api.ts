@@ -1,6 +1,7 @@
 const BASE = '/api'
 
 export interface Consumer {
+  id: number
   name: string
   topic: string
   groupId: string
@@ -19,6 +20,7 @@ export interface FieldRule {
 }
 
 export interface Transformer {
+  id: number
   name: string
   inputTopic: string
   outputTopic: string
@@ -49,8 +51,10 @@ export const api = {
     fetch(`${BASE}/consumers`).then(r => r.json()),
 
   createConsumer: (name: string, topic: string, groupId: string, enabled: boolean): Promise<Consumer> =>
-    fetch(`${BASE}/consumers?name=${encodeURIComponent(name)}&topic=${encodeURIComponent(topic)}&groupId=${encodeURIComponent(groupId)}&enabled=${enabled}`, {
+    fetch(`${BASE}/consumers`, {
       method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, topic, groupId, enabled }),
     }).then(r => r.json()),
 
   getTransformers: (): Promise<Transformer[]> =>
@@ -65,6 +69,21 @@ export const api = {
 
   deleteTransformer: (id: number): Promise<void> =>
     fetch(`${BASE}/transformers/${id}`, { method: 'DELETE' }).then(() => {}),
+
+  enableTransformer: (id: number): Promise<void> =>
+    fetch(`${BASE}/transformers/${id}/enable`, { method: 'POST' }).then(() => {}),
+
+  disableTransformer: (id: number): Promise<void> =>
+    fetch(`${BASE}/transformers/${id}/disable`, { method: 'POST' }).then(() => {}),
+
+  deleteConsumer: (id: number): Promise<void> =>
+    fetch(`${BASE}/consumers/${id}`, { method: 'DELETE' }).then(() => {}),
+
+  startConsumer: (id: number): Promise<void> =>
+    fetch(`${BASE}/consumers/${id}/start`, { method: 'POST' }).then(() => {}),
+
+  stopConsumer: (id: number): Promise<void> =>
+    fetch(`${BASE}/consumers/${id}/stop`, { method: 'POST' }).then(() => {}),
 
   getEventLogs: (): Promise<EventLog[]> =>
     fetch(`${BASE}/event-logs`).then(r => r.json()),

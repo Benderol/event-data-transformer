@@ -35,13 +35,17 @@ public class ConsumerService {
     public ConsumerResponse create(CreateConsumerRequest request) {
         var consumer = KafkaConsumerMapper.to(request);
         repository.save(consumer);
-        start(consumer);
+        if (request.enabled()) {
+            start(consumer);
+        }
         return KafkaConsumerMapper.from(consumer);
     }
 
     public void start(Long id){
         var config = repository.findById(id).orElseThrow(EntityNotFoundException::new);
-        start(config);
+         start(config);
+        config.setEnabled(true);
+        repository.save(config);
     }
 
     public void stop(Long id) {

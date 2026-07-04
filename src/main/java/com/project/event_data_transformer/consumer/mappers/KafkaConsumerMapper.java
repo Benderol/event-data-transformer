@@ -11,11 +11,12 @@ public class KafkaConsumerMapper {
         entity.setName(request.name());
         entity.setTopic(request.topic());
         entity.setGroupId(request.groupId());
+        entity.setEnabled(request.enabled());
         return entity;
     }
 
     public static ConsumerResponse from(KafkaConsumerEntity entity) {
-        return new ConsumerResponse(entity.getName(), entity.getTopic(), entity.getGroupId(), entity.getCreatedAt(), entity.isEnabled());
+        return new ConsumerResponse(entity.getId(), entity.getName(), entity.getTopic(), entity.getGroupId(), entity.getCreatedAt(), entity.isEnabled());
     }
 
 }

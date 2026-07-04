@@ -17,6 +17,10 @@ export default function ConsumerPanel() {
   const [submitting, setSubmitting] = useState(false)
 
   const load = () => api.getConsumers().then(setConsumers).catch(() => {})
+
+  const deleteConsumer = (id: number) => api.deleteConsumer(id).then(load).catch(() => {})
+  const startConsumer = (id: number) => api.startConsumer(id).then(load).catch(() => {})
+  const stopConsumer = (id: number) => api.stopConsumer(id).then(load).catch(() => {})
   useEffect(() => { load() }, [])
 
   const openModal = () => {
@@ -83,6 +87,7 @@ export default function ConsumerPanel() {
             <th style={styles.th}>Group</th>
             <th style={styles.th}>Status</th>
             <th style={styles.th}>Created</th>
+            <th style={styles.th}></th>
           </tr>
         </thead>
         <tbody>
@@ -96,10 +101,19 @@ export default function ConsumerPanel() {
                 <td style={styles.td}>{c.groupId}</td>
                 <td style={{ ...styles.td, color: c.enabled ? '#4caf50' : '#f44336' }}>{c.enabled ? 'running' : 'stopped'}</td>
                 <td style={{ ...styles.td, ...styles.muted }}>{formatDate(c.createdAt)}</td>
+                <td style={styles.td}>
+                  <div style={styles.rowActions}>
+                    {c.enabled
+                      ? <button style={styles.stopBtn} onClick={() => stopConsumer(c.id)}>Stop</button>
+                      : <button style={styles.startBtn} onClick={() => startConsumer(c.id)}>Start</button>
+                    }
+                    <button style={styles.deleteBtn} onClick={() => deleteConsumer(c.id)}>Delete</button>
+                  </div>
+                </td>
               </tr>
             ))}
           {consumers.length === 0 && (
-            <tr><td colSpan={5} style={styles.empty}>No consumers yet</td></tr>
+            <tr><td colSpan={6} style={styles.empty}>No consumers yet</td></tr>
           )}
         </tbody>
       </table>
@@ -126,4 +140,8 @@ const styles: Record<string, CSSProperties> = {
   td: { padding: '8px 12px', borderBottom: '1px solid #2a2a2a' },
   muted: { color: '#888', fontSize: 13 },
   empty: { textAlign: 'center', color: '#888', padding: 16 },
+  rowActions: { display: 'flex', gap: 6 },
+  startBtn: { padding: '4px 10px', borderRadius: 4, border: 'none', background: '#4caf5022', color: '#4caf50', cursor: 'pointer', fontSize: 12, fontWeight: 600 },
+  stopBtn: { padding: '4px 10px', borderRadius: 4, border: 'none', background: '#ff980022', color: '#ff9800', cursor: 'pointer', fontSize: 12, fontWeight: 600 },
+  deleteBtn: { padding: '4px 10px', borderRadius: 4, border: 'none', background: '#f4433622', color: '#f44336', cursor: 'pointer', fontSize: 12, fontWeight: 600 },
 }

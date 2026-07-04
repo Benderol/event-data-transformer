@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record TransformerResponse(
+        Long id,
         String name,
         String inputTopic,
         String outputTopic,

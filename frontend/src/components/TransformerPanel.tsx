@@ -22,6 +22,10 @@ export default function TransformerPanel() {
   const [submitting, setSubmitting] = useState(false)
 
   const load = () => api.getTransformers().then(setTransformers).catch(() => {})
+
+  const deleteTransformer = (id: number) => api.deleteTransformer(id).then(load).catch(() => {})
+  const toggleTransformer = (t: Transformer) =>
+    (t.enabled ? api.disableTransformer(t.id) : api.enableTransformer(t.id)).then(load).catch(() => {})
   useEffect(() => { load() }, [])
 
   const openModal = () => {
@@ -143,6 +147,7 @@ export default function TransformerPanel() {
             <th style={styles.th}>Rules</th>
             <th style={styles.th}>Status</th>
             <th style={styles.th}>Created</th>
+            <th style={styles.th}></th>
           </tr>
         </thead>
         <tbody>
@@ -165,10 +170,21 @@ export default function TransformerPanel() {
                 </td>
                 <td style={{ ...styles.td, color: t.enabled ? '#4caf50' : '#f44336' }}>{t.enabled ? 'active' : 'disabled'}</td>
                 <td style={{ ...styles.td, ...styles.muted }}>{formatDate(t.createdAt)}</td>
+                <td style={styles.td}>
+                  <div style={{ display: 'flex', gap: 6 }}>
+                    <button
+                      style={t.enabled ? styles.stopBtn : styles.startBtn}
+                      onClick={() => toggleTransformer(t)}
+                    >
+                      {t.enabled ? 'Disable' : 'Enable'}
+                    </button>
+                    <button style={styles.deleteBtn} onClick={() => deleteTransformer(t.id)}>Delete</button>
+                  </div>
+                </td>
               </tr>
             ))}
           {transformers.length === 0 && (
-            <tr><td colSpan={6} style={styles.empty}>No transformers yet</td></tr>
+            <tr><td colSpan={7} style={styles.empty}>No transformers yet</td></tr>
           )}
         </tbody>
       </table>
@@ -215,4 +231,7 @@ const styles: Record<string, CSSProperties> = {
   th: { textAlign: 'left', padding: '8px 12px', background: '#1e1e1e', color: '#aaa', borderBottom: '1px solid #333', fontWeight: 600 },
   td: { padding: '8px 12px', borderBottom: '1px solid #2a2a2a' },
   empty: { textAlign: 'center', color: '#888', padding: 16 },
+  deleteBtn: { padding: '4px 10px', borderRadius: 4, border: 'none', background: '#f4433622', color: '#f44336', cursor: 'pointer', fontSize: 12, fontWeight: 600 },
+  startBtn: { padding: '4px 10px', borderRadius: 4, border: 'none', background: '#4caf5022', color: '#4caf50', cursor: 'pointer', fontSize: 12, fontWeight: 600 },
+  stopBtn: { padding: '4px 10px', borderRadius: 4, border: 'none', background: '#ff980022', color: '#ff9800', cursor: 'pointer', fontSize: 12, fontWeight: 600 },
 }

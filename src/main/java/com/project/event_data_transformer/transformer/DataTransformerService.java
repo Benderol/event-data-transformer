@@ -3,7 +3,6 @@ package com.project.event_data_transformer.transformer;
 import com.project.event_data_transformer.transformer.dto.CreateTransformerRequest;
 import com.project.event_data_transformer.transformer.dto.TransformerResponse;
 import com.project.event_data_transformer.transformer.mappers.TransformerMapper;
-import com.project.event_data_transformer.transformer.models.TransformerEntity;
 import com.project.event_data_transformer.transformer.repository.DataTransformerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +24,13 @@ public class DataTransformerService {
     public TransformerResponse create(CreateTransformerRequest request) {
         var transformer = transformerRepository.save(TransformerMapper.to(request));
         return TransformerMapper.from(transformer);
+    }
+
+    public void setEnabled(Long id, boolean enabled) {
+        var transformer = transformerRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Transformer not found: " + id));
+        transformer.setEnabled(enabled);
+        transformerRepository.save(transformer);
     }
 
     public void delete(Long id) {
